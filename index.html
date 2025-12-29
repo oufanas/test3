@@ -1114,41 +1114,62 @@
                     filtered = filtered.filter(event => event.category === activeFilters.category);
                 }
 
-// Date filter (USANDO Date y dateISO)
-if (activeFilters.date === 'today') {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+// Date filter (usando Date y dateISO)
+if (activeFilters.date) {
+
+    const normalizeDate = (date) => {
+        const d = new Date(date);
+        d.setHours(0, 0, 0, 0);
+        return d;
+    };
+
+    const today = normalizeDate(new Date());
 
     filtered = filtered.filter(event => {
-        const eventDate = new Date(event.dateISO);
-        eventDate.setHours(0, 0, 0, 0);
+        const eventDate = normalizeDate(event.dateISO);
 
-        return eventDate.getTime() === today.getTime();
-    });
+        // HOY
+        if (activeFilters.date === 'today') {
+            return eventDate.getTime() === today.getTime();
+        }
 
-} else if (activeFilters.date === 'weekend') {
-    const now = new Date();
-    const currentDay = now.getDay(); // 0 = domingo, 6 = sábado
+        // MAÑANA
+        if (activeFilters.date === 'tomorrow') {
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
 
-    // Calcular sábado de esta semana
-    const saturday = new Date(now);
-    saturday.setDate(now.getDate() + (6 - currentDay));
-    saturday.setHours(0, 0, 0, 0);
+            return eventDate.getTime() === tomorrow.getTime();
+        }
 
-    // Calcular domingo de esta semana
-    const sunday = new Date(saturday);
-    sunday.setDate(saturday.getDate() + 1);
+        // FIN DE SEMANA (sábado y domingo)
+        if (activeFilters.date === 'weekend') {
+            const dayOfWeek = today.getDay(); // 0 domingo, 6 sábado
 
-    filtered = filtered.filter(event => {
-        const eventDate = new Date(event.dateISO);
-        eventDate.setHours(0, 0, 0, 0);
+            const saturday = new Date(today);
+            saturday.setDate(today.getDate() + (6 - dayOfWeek));
 
-        return (
-            eventDate.getTime() === saturday.getTime() ||
-            eventDate.getTime() === sunday.getTime()
-        );
+            const sunday = new Date(saturday);
+            sunday.setDate(saturday.getDate() + 1);
+
+            return (
+                eventDate.getTime() === saturday.getTime() ||
+                eventDate.getTime() === sunday.getTime()
+            );
+        }
+
+        // ESTA SEMANA (desde hoy hasta domingo)
+        if (activeFilters.date === 'week') {
+            const dayOfWeek = today.getDay(); // 0 domingo
+            const sunday = new Date(today);
+            sunday.setDate(today.getDate() + (7 - dayOfWeek));
+
+            return eventDate >= today && eventDate <= sunday;
+        }
+
+        return true;
     });
 }
+
 
 
                 // Price filter
