@@ -1316,7 +1316,7 @@ if (activeFilters.date) {
 
                                 {/* Advanced Filters Panel */}
                                 {showFilters && (
-                                    <div className="mb-6">
+                                    <div className="mb-6 filters-panel max-h-[80vh] overflow-y-auto overscroll-contain">
                                         <SearchFilters
                                             searchQuery={searchQuery}
                                             onSearchChange={setSearchQuery}
