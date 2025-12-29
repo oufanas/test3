@@ -1,287 +1,222 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eventos Culturales</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aplicación de gestión de eventos culturales - Consulta, filtra y reserva eventos cerca de ti">
+    <title>EventosCultura - Gestión de Eventos Culturales</title>
 
-  <!-- Tipografía accesible -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <style>
-    /* =====================
-       VARIABLES Y RESET
-    ====================== */
-    :root {
-      --color-primary: #4f46e5;
-      --color-secondary: #6366f1;
-      --color-bg: #f9fafb;
-      --color-surface: #ffffff;
-      --color-text: #1f2933;
-      --color-muted: #6b7280;
-      --radius: 12px;
-      --transition: all 0.3s ease;
-    }
+    <!-- React -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <style>
+        /* =====================
+           MEJORAS CSS3
+        ====================== */
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--color-bg);
-      color: var(--color-text);
-      line-height: 1.6;
-    }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    img {
-      max-width: 100%;
-      display: block;
-      border-radius: var(--radius);
-    }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell;
+        }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+        /* Animación suave al aparecer tarjetas */
+        .fade-in {
+            animation: fadeInUp 0.4s ease-out both;
+        }
 
-    button {
-      cursor: pointer;
-      border: none;
-      font-family: inherit;
-    }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    /* =====================
-       HEADER Y NAVEGACIÓN
-    ====================== */
-    header {
-      background-color: var(--color-surface);
-      border-bottom: 1px solid #e5e7eb;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
+        /* Mejora de hover tarjetas */
+        .event-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-    nav {
-      max-width: 1200px;
-      margin: auto;
-      padding: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        .event-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px rgba(0,0,0,0.12);
+        }
 
-    nav h1 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--color-primary);
-    }
-
-    nav ul {
-      display: flex;
-      gap: 1rem;
-      list-style: none;
-    }
-
-    nav li {
-      font-weight: 600;
-      color: var(--color-muted);
-      transition: var(--transition);
-    }
-
-    nav li:hover {
-      color: var(--color-primary);
-    }
-
-    /* =====================
-       LAYOUT PRINCIPAL
-    ====================== */
-    main {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-
-    /* =====================
-       FILTROS
-    ====================== */
-    aside {
-      background-color: var(--color-surface);
-      padding: 1.5rem;
-      border-radius: var(--radius);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    }
-
-    aside h2 {
-      margin-bottom: 1rem;
-      font-size: 1.1rem;
-    }
-
-    aside label {
-      font-size: 0.9rem;
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-
-    aside select,
-    aside input {
-      width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      border-radius: 8px;
-      border: 1px solid #d1d5db;
-    }
-
-    /* =====================
-       LISTADO DE EVENTOS
-    ====================== */
-    section {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-
-    article {
-      background-color: var(--color-surface);
-      border-radius: var(--radius);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-      overflow: hidden;
-      transition: var(--transition);
-    }
-
-    article:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-    }
-
-    article img {
-      height: 160px;
-      object-fit: cover;
-    }
-
-    .event-content {
-      padding: 1rem;
-    }
-
-    .event-content h3 {
-      font-size: 1.1rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .event-meta {
-      font-size: 0.85rem;
-      color: var(--color-muted);
-      margin-bottom: 1rem;
-    }
-
-    .event-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .btn {
-      padding: 0.5rem 1rem;
-      border-radius: 999px;
-      background-color: var(--color-primary);
-      color: white;
-      font-size: 0.85rem;
-      transition: var(--transition);
-    }
-
-    .btn:hover {
-      background-color: var(--color-secondary);
-    }
-
-    /* =====================
-       FOOTER
-    ====================== */
-    footer {
-      margin-top: 3rem;
-      padding: 2rem 1rem;
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--color-muted);
-    }
-
-    /* =====================
-       RESPONSIVE
-    ====================== */
-    @media (min-width: 768px) {
-      main {
-        grid-template-columns: 250px 1fr;
-      }
-    }
-  </style>
+        /* Focus accesible */
+        :focus-visible {
+            outline: 3px solid #8b5cf6;
+            outline-offset: 3px;
+        }
+    </style>
 </head>
 
-<body>
+<body class="bg-gray-50">
 
-  <header>
-    <nav aria-label="Navegación principal">
-      <h1>Eventos Culturales</h1>
-      <ul>
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Mis eventos</a></li>
-        <li><a href="#">Perfil</a></li>
-      </ul>
-    </nav>
-  </header>
+<a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 bg-purple-600 text-white px-4 py-2 rounded">
+    Saltar al contenido principal
+</a>
 
-  <main>
-    <aside aria-labelledby="filtros">
-      <h2 id="filtros">Filtros</h2>
+<div id="root"></div>
 
-      <label for="categoria">Categoría</label>
-      <select id="categoria">
-        <option>Todos</option>
-        <option>Conciertos</option>
-        <option>Teatro</option>
-        <option>Exposiciones</option>
-      </select>
+<script type="text/babel">
+const { useState, useEffect } = React;
 
-      <label for="fecha">Fecha</label>
-      <input type="date" id="fecha">
+/* =====================
+   NAVBAR SEMÁNTICA
+====================== */
+function NavBar({ currentView, onNavigate, savedCount }) {
+    return (
+        <header className="sticky top-0 z-50 bg-white border-b shadow-sm">
+            <nav className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center"
+                 aria-label="Navegación principal">
+                <div className="flex items-center gap-3">
+                    <span className="text-2xl">🎫</span>
+                    <span className="font-bold text-lg">EventosCultura</span>
+                </div>
 
-      <label for="ubicacion">Ubicación</label>
-      <input type="text" id="ubicacion" placeholder="Ciudad">
-    </aside>
+                <ul className="flex gap-2">
+                    {[
+                        { id: 'home', label: 'Inicio' },
+                        { id: 'saved', label: 'Mis eventos' },
+                        { id: 'profile', label: 'Perfil' }
+                    ].map(item => (
+                        <li key={item.id}>
+                            <button
+                                onClick={() => onNavigate(item.id)}
+                                className={`px-4 py-2 rounded-lg transition-colors font-medium ${
+                                    currentView === item.id
+                                        ? 'bg-purple-600 text-white'
+                                        : 'bg-gray-100 hover:bg-gray-200'
+                                }`}
+                                aria-current={currentView === item.id ? 'page' : undefined}
+                            >
+                                {item.label}
+                                {item.id === 'saved' && savedCount > 0 && (
+                                    <span className="ml-2 text-xs bg-red-500 text-white rounded-full px-2">
+                                        {savedCount}
+                                    </span>
+                                )}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </nav>
+        </header>
+    );
+}
 
-    <section aria-label="Listado de eventos">
-      <article>
-        <img src="https://picsum.photos/400/200?random=1" alt="Concierto en vivo">
-        <div class="event-content">
-          <h3>Concierto de Jazz</h3>
-          <p class="event-meta">15 de mayo · Madrid</p>
-          <div class="event-actions">
-            <span>20 €</span>
-            <button class="btn">Ver detalle</button>
-          </div>
+/* =====================
+   EVENT CARD
+====================== */
+function EventCard({ event, onView }) {
+    return (
+        <article className="event-card fade-in bg-white rounded-xl overflow-hidden shadow-md">
+            <img
+                src={event.image}
+                alt={`Imagen del evento ${event.title}`}
+                className="h-48 w-full object-cover"
+                loading="lazy"
+            />
+
+            <div className="p-4">
+                <h3 className="font-bold text-lg mb-2">{event.title}</h3>
+                <p className="text-sm text-gray-600 mb-4">{event.date} · {event.location}</p>
+
+                <div className="flex justify-between items-center">
+                    <span className="font-bold">
+                        {event.price === 0 ? 'Gratis' : `${event.price}€`}
+                    </span>
+                    <button
+                        onClick={() => onView(event)}
+                        className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                    >
+                        Ver detalle
+                    </button>
+                </div>
+            </div>
+        </article>
+    );
+}
+
+/* =====================
+   APP PRINCIPAL
+====================== */
+function App() {
+    const [currentView, setCurrentView] = useState('home');
+    const [selectedEvent, setSelectedEvent] = useState(null);
+
+    const events = [
+        {
+            id: 1,
+            title: 'Concierto de Rock',
+            date: '15 Diciembre 2025',
+            location: 'Madrid',
+            price: 45,
+            image: 'https://picsum.photos/600/400?random=1'
+        },
+        {
+            id: 2,
+            title: 'Exposición de Arte',
+            date: '14 Diciembre 2025',
+            location: 'Museo Reina Sofía',
+            price: 0,
+            image: 'https://picsum.photos/600/400?random=2'
+        }
+    ];
+
+    return (
+        <div className="min-h-screen flex flex-col">
+            <NavBar
+                currentView={currentView}
+                onNavigate={setCurrentView}
+                savedCount={1}
+            />
+
+            <main id="main-content" className="flex-1 max-w-7xl mx-auto px-4 py-8">
+                {currentView === 'home' && (
+                    <section aria-labelledby="events-title">
+                        <h2 id="events-title" className="text-2xl font-bold mb-6">
+                            Eventos destacados
+                        </h2>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {events.map(event => (
+                                <EventCard
+                                    key={event.id}
+                                    event={event}
+                                    onView={setSelectedEvent}
+                                />
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {currentView === 'profile' && (
+                    <section>
+                        <h2 className="text-2xl font-bold">Perfil de usuario</h2>
+                    </section>
+                )}
+            </main>
+
+            <footer className="bg-white border-t text-center py-6 text-sm text-gray-500">
+                Proyecto académico · Diseño de Interfaces · 2025
+            </footer>
         </div>
-      </article>
+    );
+}
 
-      <article>
-        <img src="https://picsum.photos/400/200?random=2" alt="Obra de teatro">
-        <div class="event-content">
-          <h3>Obra de Teatro</h3>
-          <p class="event-meta">20 de mayo · Barcelona</p>
-          <div class="event-actions">
-            <span>15 €</span>
-            <button class="btn">Ver detalle</button>
-          </div>
-        </div>
-      </article>
-    </section>
-  </main>
-
-  <footer>
-    Proyecto académico · Diseño de Interfaces · 2025
-  </footer>
-
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
 </body>
 </html>
