@@ -690,7 +690,7 @@
                             </div>
                             <button
                                 onClick={() => onViewDetail(event.id)}
-                                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 hover:shadow-lg transition-colors text-sm font-medium"
                                 aria-label={`Ver detalles de ${event.title}`}
                             >
                                 Ver detalle
@@ -1111,7 +1111,7 @@
                         savedCount={savedEvents.size}
                     />
 
-                    <main id="main-content" className="max-w-7xl mx-auto px-4 py-6">
+                    <main id="main-content" className="max-w-7xl mx-auto px-4 py-6 view-transition">
                         {/* Home View - Pantalla 1: Listado de Eventos */}
                         {currentView === 'home' && (
                             <>
