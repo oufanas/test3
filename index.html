@@ -511,7 +511,7 @@
         // Components
 
         // Navigation Bar
-        function NavBar({ currentView, onNavigate, savedCount }) {
+        function NavBar({ currentView, onNavigate, onHome, savedCount }) {
             return (
                 <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm" role="navigation" aria-label="Navegación principal">
                     <div className="max-w-7xl mx-auto px-4 py-4">
@@ -1064,6 +1064,19 @@
 
         // Main App Component
         function App() {
+
+            const goToHome = () => {
+                setCurrentView('home');
+                setSearchQuery('');
+                setActiveFilters({
+                    category: '',
+                    date: '',
+                    location: ''
+                });
+                setShowFilters(false);
+                setSelectedEvent(null);
+            };
+
             const [currentView, setCurrentView] = useState('home');
             const [searchQuery, setSearchQuery] = useState('');
             const [activeFilters, setActiveFilters] = useState({
@@ -1258,7 +1271,8 @@ if (activeFilters.date) {
                 <div className="min-h-screen bg-gray-50">
                     <NavBar 
                         currentView={currentView} 
-                        onNavigate={setCurrentView}
+                        onNavigate={setCurrentView} 
+                        onHome={goToHome}
                         savedCount={savedEvents.size}
                     />
 
