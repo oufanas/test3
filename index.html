@@ -1,214 +1,287 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>EventosCultura</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eventos Culturales</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Tipografía accesible -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =====================
+       VARIABLES Y RESET
+    ====================== */
+    :root {
+      --color-primary: #4f46e5;
+      --color-secondary: #6366f1;
+      --color-bg: #f9fafb;
+      --color-surface: #ffffff;
+      --color-text: #1f2933;
+      --color-muted: #6b7280;
+      --radius: 12px;
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+      border-radius: var(--radius);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    /* =====================
+       HEADER Y NAVEGACIÓN
+    ====================== */
+    header {
+      background-color: var(--color-surface);
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    nav ul {
+      display: flex;
+      gap: 1rem;
+      list-style: none;
+    }
+
+    nav li {
+      font-weight: 600;
+      color: var(--color-muted);
+      transition: var(--transition);
+    }
+
+    nav li:hover {
+      color: var(--color-primary);
+    }
+
+    /* =====================
+       LAYOUT PRINCIPAL
+    ====================== */
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    /* =====================
+       FILTROS
+    ====================== */
+    aside {
+      background-color: var(--color-surface);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+
+    aside h2 {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    aside label {
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    aside select,
+    aside input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+    }
+
+    /* =====================
+       LISTADO DE EVENTOS
+    ====================== */
+    section {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    article {
+      background-color: var(--color-surface);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    article:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    article img {
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .event-content {
+      padding: 1rem;
+    }
+
+    .event-content h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .event-meta {
+      font-size: 0.85rem;
+      color: var(--color-muted);
+      margin-bottom: 1rem;
+    }
+
+    .event-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      background-color: var(--color-primary);
+      color: white;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+
+    .btn:hover {
+      background-color: var(--color-secondary);
+    }
+
+    /* =====================
+       FOOTER
+    ====================== */
+    footer {
+      margin-top: 3rem;
+      padding: 2rem 1rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--color-muted);
+    }
+
+    /* =====================
+       RESPONSIVE
+    ====================== */
+    @media (min-width: 768px) {
+      main {
+        grid-template-columns: 250px 1fr;
+      }
+    }
+  </style>
 </head>
 
-<body class="bg-gray-50">
-<div id="root"></div>
+<body>
 
-<script type="text/babel">
-const { useState, useEffect } = React;
+  <header>
+    <nav aria-label="Navegación principal">
+      <h1>Eventos Culturales</h1>
+      <ul>
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Mis eventos</a></li>
+        <li><a href="#">Perfil</a></li>
+      </ul>
+    </nav>
+  </header>
 
-/* =========================
-   UTILIDADES
-========================= */
-const formatDate = (dateStr) =>
-  new Date(dateStr).toLocaleDateString("es-ES", {
-    day: "numeric",
-    month: "long",
-    year: "numeric"
-  });
+  <main>
+    <aside aria-labelledby="filtros">
+      <h2 id="filtros">Filtros</h2>
 
-/* =========================
-   EVENTOS (DATOS)
-========================= */
-const mockEvents = [
-{
-  id: "1",
-  title: "Concierto de Rock en Vivo",
-  category: "Concierto",
-  date: "2025-12-15",
-  time: "20:00",
-  location: "Estadio Nacional, Madrid",
-  image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400",
-  price: 45,
-  description: "Una noche épica de rock."
-},
-{
-  id: "2",
-  title: "Obra de Teatro: La vida es sueño",
-  category: "Teatro",
-  date: "2025-12-14",
-  time: "19:30",
-  location: "Teatro Real, Madrid",
-  image: "https://images.unsplash.com/photo-1507924538820-ede94a04019d?w=400",
-  price: 35,
-  description: "Clásico del teatro español."
-},
-{
-  id: "3",
-  title: "Exposición de Arte Contemporáneo",
-  category: "Arte",
-  date: "2025-12-20",
-  time: "10:00",
-  location: "Museo Reina Sofía",
-  image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400",
-  price: 0,
-  description: "Arte moderno y contemporáneo."
-},
-{
-  id: "4",
-  title: "Festival Gastronómico",
-  category: "Gastronomía",
-  date: "2025-12-22",
-  time: "12:00",
-  location: "Parque del Retiro",
-  image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400",
-  price: 0,
-  description: "Cocina internacional."
-},
-{
-  id: "5",
-  title: "Concierto de Jazz Nocturno",
-  category: "Concierto",
-  date: "2025-12-18",
-  time: "22:00",
-  location: "Sala Clamores",
-  image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400",
-  price: 25,
-  description: "Jazz en vivo con artistas internacionales."
-}
-];
+      <label for="categoria">Categoría</label>
+      <select id="categoria">
+        <option>Todos</option>
+        <option>Conciertos</option>
+        <option>Teatro</option>
+        <option>Exposiciones</option>
+      </select>
 
-/* =========================
-   COMPONENTE PRINCIPAL
-========================= */
-function App() {
-  const [search, setSearch] = useState("");
-  const [dateFilter, setDateFilter] = useState(null);
-  const [filteredEvents, setFilteredEvents] = useState(mockEvents);
+      <label for="fecha">Fecha</label>
+      <input type="date" id="fecha">
 
-  useEffect(() => {
-    let results = [...mockEvents];
+      <label for="ubicacion">Ubicación</label>
+      <input type="text" id="ubicacion" placeholder="Ciudad">
+    </aside>
 
-    /* BUSCADOR */
-    if (search) {
-      results = results.filter(e =>
-        e.title.toLowerCase().includes(search.toLowerCase()) ||
-        e.category.toLowerCase().includes(search.toLowerCase()) ||
-        e.location.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    /* FILTRO DE FECHA */
-    if (dateFilter) {
-      const today = new Date();
-      today.setHours(0,0,0,0);
-
-      results = results.filter(e => {
-        const eventDate = new Date(e.date);
-
-        if (dateFilter === "today") {
-          return eventDate.getTime() === today.getTime();
-        }
-
-        if (dateFilter === "tomorrow") {
-          const t = new Date(today);
-          t.setDate(today.getDate() + 1);
-          return eventDate.getTime() === t.getTime();
-        }
-
-        if (dateFilter === "week") {
-          const end = new Date(today);
-          end.setDate(today.getDate() + 7);
-          return eventDate >= today && eventDate <= end;
-        }
-
-        if (dateFilter === "weekend") {
-          const d = eventDate.getDay();
-          return d === 6 || d === 0;
-        }
-
-        if (dateFilter === "month") {
-          const end = new Date(today);
-          end.setMonth(today.getMonth() + 1);
-          return eventDate >= today && eventDate <= end;
-        }
-
-        return true;
-      });
-    }
-
-    setFilteredEvents(results);
-  }, [search, dateFilter]);
-
-  return (
-    <main className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">EventosCultura</h1>
-
-      {/* BUSCADOR */}
-      <input
-        type="text"
-        placeholder="Buscar eventos..."
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        className="w-full mb-4 p-3 border rounded-lg"
-      />
-
-      {/* FILTROS DE FECHA */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        {[
-          ["today","Hoy"],
-          ["tomorrow","Mañana"],
-          ["week","Esta semana"],
-          ["weekend","Fin de semana"],
-          ["month","Este mes"]
-        ].map(([id,label]) => (
-          <button
-            key={id}
-            onClick={() => setDateFilter(dateFilter === id ? null : id)}
-            className={`px-4 py-2 rounded-full ${
-              dateFilter === id ? "bg-purple-600 text-white" : "bg-gray-200"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
-      {/* LISTADO */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredEvents.map(event => (
-          <div key={event.id} className="bg-white rounded-xl shadow p-4">
-            <img src={event.image} className="h-40 w-full object-cover rounded" />
-            <h3 className="font-bold text-lg mt-3">{event.title}</h3>
-            <p className="text-sm text-gray-600">{formatDate(event.date)} · {event.time}</p>
-            <p className="text-sm">{event.location}</p>
-            <p className="mt-2 font-semibold">
-              {event.price === 0 ? "Gratis" : `${event.price}€`}
-            </p>
+    <section aria-label="Listado de eventos">
+      <article>
+        <img src="https://picsum.photos/400/200?random=1" alt="Concierto en vivo">
+        <div class="event-content">
+          <h3>Concierto de Jazz</h3>
+          <p class="event-meta">15 de mayo · Madrid</p>
+          <div class="event-actions">
+            <span>20 €</span>
+            <button class="btn">Ver detalle</button>
           </div>
-        ))}
-      </div>
+        </div>
+      </article>
 
-      {filteredEvents.length === 0 && (
-        <p className="text-center mt-10 text-gray-500">
-          No se encontraron eventos
-        </p>
-      )}
-    </main>
-  );
-}
+      <article>
+        <img src="https://picsum.photos/400/200?random=2" alt="Obra de teatro">
+        <div class="event-content">
+          <h3>Obra de Teatro</h3>
+          <p class="event-meta">20 de mayo · Barcelona</p>
+          <div class="event-actions">
+            <span>15 €</span>
+            <button class="btn">Ver detalle</button>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-</script>
+  <footer>
+    Proyecto académico · Diseño de Interfaces · 2025
+  </footer>
+
 </body>
 </html>
